@@ -1,23 +1,21 @@
 #!/usr/bin/env bash
-
-# Exit on error
 set -o errexit
 
-# Install Python dependencies
+# Python deps
 pip install -r requirements.txt
 
-# --- Frontend Build ---
-# Navigate to the frontend directory
+# Ensure Node/Yarn present (Render’s Node is usually available; if not, add a Node service/runtime)
+# Frontend build
 cd vue3
-# Install JS dependencies
-yarn install
-# Build the frontend assets for production
+# Clean previous outputs to avoid stale manifests
+rm -rf node_modules dist
+yarn install --frozen-lockfile || yarn install
+# Make sure Vite runs a production build with manifest
+# If your vite.config.ts doesn’t already set build.manifest = true and outDir = 'dist',
+# Vite sets manifest in build mode by default.
 yarn build
-# Navigate back to the project root
 cd ..
 
-# --- Django ---
-# Collect static files (including the ones built by Vite)
+# Django
 python manage.py collectstatic --no-input
-# Apply database migrations
 python manage.py migrate
