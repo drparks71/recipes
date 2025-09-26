@@ -113,7 +113,7 @@ FORCE_THEME_FROM_SPACE = int(os.getenv('FORCE_THEME_FROM_SPACE', 0))
 # minimum interval that users can set for automatic sync of shopping lists
 SHOPPING_MIN_AUTOSYNC_INTERVAL = int(os.getenv('SHOPPING_MIN_AUTOSYNC_INTERVAL', 5))
 
-ALLOWED_HOSTS = extract_comma_list('ALLOWED_HOSTS', '*')
+ALLOWED_HOSTS = extract_comma_list('ALLOWED_HOSTS', 'inspections.bridgetroll.net')
 CSRF_TRUSTED_ORIGINS = extract_comma_list('CSRF_TRUSTED_ORIGINS')
 
 if CORS_ORIGIN_ALLOW_ALL := os.getenv('CORS_ORIGIN_ALLOW_ALL') is not None:
@@ -296,33 +296,34 @@ AUTHENTICATION_BACKENDS = []
 # LDAP
 LDAP_AUTH = bool(os.getenv('LDAP_AUTH', False))
 if LDAP_AUTH:
-    import ldap
-    from django_auth_ldap.config import LDAPSearch
-
-    AUTHENTICATION_BACKENDS.append('django_auth_ldap.backend.LDAPBackend')
-    AUTH_LDAP_SERVER_URI = os.getenv('AUTH_LDAP_SERVER_URI')
-    AUTH_LDAP_START_TLS = extract_bool('AUTH_LDAP_START_TLS', False)
-    AUTH_LDAP_BIND_DN = os.getenv('AUTH_LDAP_BIND_DN')
-    AUTH_LDAP_BIND_PASSWORD = os.getenv('AUTH_LDAP_BIND_PASSWORD')
-    AUTH_LDAP_USER_SEARCH = LDAPSearch(
-        os.getenv('AUTH_LDAP_USER_SEARCH_BASE_DN'),
-        ldap.SCOPE_SUBTREE,
-        os.getenv('AUTH_LDAP_USER_SEARCH_FILTER_STR', '(uid=%(user)s)'),
-    )
-    AUTH_LDAP_USER_ATTR_MAP = ast.literal_eval(os.getenv('AUTH_LDAP_USER_ATTR_MAP')) if os.getenv('AUTH_LDAP_USER_ATTR_MAP') else {
-        'first_name': 'givenName',
-        'last_name': 'sn',
-        'email': 'mail',
-    }
-    AUTH_LDAP_ALWAYS_UPDATE_USER = extract_bool('AUTH_LDAP_ALWAYS_UPDATE_USER', True)
-    AUTH_LDAP_CACHE_TIMEOUT = int(os.getenv('AUTH_LDAP_CACHE_TIMEOUT', 3600))
-    if 'AUTH_LDAP_TLS_CACERTFILE' in os.environ:
-        AUTH_LDAP_GLOBAL_OPTIONS = {ldap.OPT_X_TLS_CACERTFILE: os.getenv('AUTH_LDAP_TLS_CACERTFILE')}
-    if DEBUG:
-        LOGGING["loggers"]["django_auth_ldap"] = {
-            "level": "DEBUG",
-            "handlers": ["console"]
-        }
+    pass
+    # import ldap
+    # from django_auth_ldap.config import LDAPSearch
+    #
+    # AUTHENTICATION_BACKENDS.append('django_auth_ldap.backend.LDAPBackend')
+    # AUTH_LDAP_SERVER_URI = os.getenv('AUTH_LDAP_SERVER_URI')
+    # AUTH_LDAP_START_TLS = extract_bool('AUTH_LDAP_START_TLS', False)
+    # AUTH_LDAP_BIND_DN = os.getenv('AUTH_LDAP_BIND_DN')
+    # AUTH_LDAP_BIND_PASSWORD = os.getenv('AUTH_LDAP_BIND_PASSWORD')
+    # AUTH_LDAP_USER_SEARCH = LDAPSearch(
+    #     os.getenv('AUTH_LDAP_USER_SEARCH_BASE_DN'),
+    #     ldap.SCOPE_SUBTREE,
+    #     os.getenv('AUTH_LDAP_USER_SEARCH_FILTER_STR', '(uid=%(user)s)'),
+    # )
+    # AUTH_LDAP_USER_ATTR_MAP = ast.literal_eval(os.getenv('AUTH_LDAP_USER_ATTR_MAP')) if os.getenv('AUTH_LDAP_USER_ATTR_MAP') else {
+    #     'first_name': 'givenName',
+    #     'last_name': 'sn',
+    #     'email': 'mail',
+    # }
+    # AUTH_LDAP_ALWAYS_UPDATE_USER = extract_bool('AUTH_LDAP_ALWAYS_UPDATE_USER', True)
+    # AUTH_LDAP_CACHE_TIMEOUT = int(os.getenv('AUTH_LDAP_CACHE_TIMEOUT', 3600))
+    # if 'AUTH_LDAP_TLS_CACERTFILE' in os.environ:
+    #     AUTH_LDAP_GLOBAL_OPTIONS = {ldap.OPT_X_TLS_CACERTFILE: os.getenv('AUTH_LDAP_TLS_CACERTFILE')}
+    # if DEBUG:
+    #     LOGGING["loggers"]["django_auth_ldap"] = {
+    #         "level": "DEBUG",
+    #         "handlers": ["console"]
+    #     }
 
 AUTHENTICATION_BACKENDS += [
     'django.contrib.auth.backends.ModelBackend',
@@ -535,7 +536,7 @@ DJANGO_VITE = {
     "default": {
         "dev_mode": False,
         "static_url_prefix": 'vue3',
-        'manifest_path': os.path.join(BASE_DIR, 'cookbook/static/vue3/manifest.json'),
+        'manifest_path': os.getenv('DJANGO_VITE_MANIFEST_PATH', os.path.join(BASE_DIR, 'vue3', 'dist', 'manifest.json')),
         "dev_server_port": 5173,
         "dev_server_host": os.getenv('DJANGO_VITE_DEV_SERVER_HOST', 'localhost'),
     },

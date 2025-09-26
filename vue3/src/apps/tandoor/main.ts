@@ -12,7 +12,8 @@ import {createRulesPlugin} from 'vuetify/labs/rules'
 
 import {setupI18n} from "@/i18n";
 import MealPlanPage from "@/pages/MealPlanPage.vue";
-import {TANDOOR_PLUGINS, TandoorPlugin} from "@/types/Plugins.ts";
+import {TANDOOR_PLUGINS} from "@/types/Plugins.ts";
+import type { TandoorPlugin } from "@/types/Plugins.ts";
 
 let routes = [
     {path: '/', component: () => import("@/pages/StartPage.vue"), name: 'StartPage' },
@@ -59,7 +60,7 @@ let routes = [
 ]
 
 // load plugin routes into routing table
-TANDOOR_PLUGINS.forEach(plugin => {
+TANDOOR_PLUGINS.forEach((plugin: TandoorPlugin) => {
     routes = routes.concat(plugin.routes)
 })
 
