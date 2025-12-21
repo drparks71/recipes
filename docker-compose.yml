@@ -1,0 +1,9 @@
+    services:
+      db:
+        image: postgres:16-alpine
+        ports:
+          - "5432:5432"
+        environment:
+          POSTGRES_DB: tandoor
+          POSTGRES_USER: tandoor
+          POSTGRES_PASSWORD: password
